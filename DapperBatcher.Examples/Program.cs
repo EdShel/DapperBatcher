@@ -7,11 +7,14 @@ using var connection = new SqliteConnection("Data Source=:memory:");
 connection.Open(); // Open the connection before using it
 InitializeDB(connection);
 
-var val1 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
-var val2 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 2 });
+var intt = connection.QueryFirstOrDefault<int>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 1 });
+System.Console.WriteLine($"Id: {intt}");
 
-Console.WriteLine($"Cat 1: {val1.GetValue()}");
-Console.WriteLine($"Cat 2: {val2.GetValue()}");
+// var val1 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
+// var val2 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 2 });
+
+// Console.WriteLine($"Cat 1: {val1.GetValue()}");
+// Console.WriteLine($"Cat 2: {val2.GetValue()}");
 // var cat1 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
 // var cat1 = connection.QueryFirstOrDefault<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $id AND CoatColor = :coatColor", new { Id = 1, CoatColor = "Orange" });
 // var cat2 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = 2");

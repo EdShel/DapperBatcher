@@ -2,7 +2,6 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
-using Dapper;
 
 namespace EdShel.DapperBatcher;
 
@@ -10,25 +9,81 @@ internal class ConnectionContext(
     IDbConnection realConnection // TODO: check for memory leak (don't know if this holds the reference)
 )
 {
-    internal readonly List<IBatchItem> BatchedCommands = new();
+    /// <summary>
+    /// List of commands created by Dapper.
+    /// </summary>
+    internal readonly List<ProxyCommand> BatchedCommands = new();
+
+    /// <summary>
+    /// List of value accessors given away to the user.
+    /// Has the same length as <see cref="BatchedCommands"/>
+    /// </summary>
+    internal readonly List<IBatchItem> BatchedItems = new();
+
+    internal void AddToBatch(IBatchItem item, ProxyCommand command)
+    {
+        BatchedCommands.Add(command);
+        BatchedItems.Add(item);
+    }
 
     internal async Task FlushBatchAsync(CancellationToken cancellationToken)
     {
-        // TODO: don't reopen conenction if it's already open
-        realConnection.Open();
-        IDbCommand realCommand = CreateRealCommand();
-        // TODO: cast to DbCommand and execute async if needed
-        var dataReader = realCommand is DbCommand dbCommand
-            ? await dbCommand.ExecuteReaderAsync(cancellationToken)
-            : realCommand.ExecuteReader();
-        int commandIndex = 0;
-        do
+        // TODO: don't reopen connection if it's already open
+        try
         {
-            Debug.Assert(commandIndex < BatchedCommands.Count);
-            var deserializedResult = SqlMapper.Parse(dataReader, BatchedCommands[commandIndex].ResultType);
-            BatchedCommands[commandIndex].ReceiveResult(deserializedResult.FirstOrDefault());
-            commandIndex++;
-        } while (dataReader.NextResult());
+            realConnection.Open();
+            IDbCommand realCommand = CreateRealCommand();
+            using var dataReader = realCommand is DbCommand dbCommand
+                ? await dbCommand.ExecuteReaderAsync(cancellationToken)
+                : realCommand.ExecuteReader();
+            int index = 0;
+            bool hasNonQueryCommands = false;
+            do
+            {
+                Debug.Assert(index < BatchedItems.Count);
+                while (index < BatchedItems.Count && BatchedItems[index] is BatchedNonQueryValue)
+                {
+                    hasNonQueryCommands = true;
+                    index++;
+                }
+                if (index >= BatchedItems.Count)
+                {
+                    index++; // For the exception guard after the loop
+                    break;
+                }
+
+                IBatchItem batchedValue = BatchedItems[index];
+                batchedValue.ReceiveResult(dataReader);
+                index++;
+            } while (dataReader.NextResult());
+
+            if (index < BatchedItems.Count)
+            {
+                throw new SqlBatchingException(
+                    "Batch returned fewer result sets than expected. Make sure all INSERT/UPDATE/DELETE commands are executed under ExecuteBatched.");
+            }
+            else if (index > BatchedItems.Count)
+            {
+                throw new SqlBatchingException(
+                    "Batch returned more result sets than expected. This typically happens when multiple SELECT commands are queried under a single batched command. Try putting each SELECT in its own *Batched command.");
+            }
+
+            if (hasNonQueryCommands)
+            {
+                foreach (IBatchItem batchedValue in BatchedItems)
+                {
+                    if (batchedValue is BatchedNonQueryValue)
+                    {
+                        batchedValue.ReceiveResult(dataReader);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            BatchedCommands.Clear();
+            BatchedItems.Clear();
+        }
     }
 
     private IDbCommand CreateRealCommand()
@@ -39,9 +94,8 @@ internal class ConnectionContext(
         int parametersCounter = 0;
 
         var sb = new StringBuilder();
-        foreach (var batchItem in BatchedCommands)
+        foreach (ProxyCommand command in BatchedCommands)
         {
-            ProxyCommand command = batchItem.Command;
             var parameterNamesToReplace = new Dictionary<string, string>();
 
             foreach (ProxyParameter commandParameter in command.ParametersSafe)

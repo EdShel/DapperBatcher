@@ -86,7 +86,6 @@ public class QuerySingleBatchedTests
 
         // Act
         var batch = db.QuerySingleBatched<int?>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 222 });
-        var id = batch.GetValue();
 
         // Assert
         var exception = Assert.Throws<InvalidOperationException>(() => batch.GetValue());
@@ -101,10 +100,9 @@ public class QuerySingleBatchedTests
 
         // Act
         var batch = db.QuerySingleBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat ORDER BY Id");
-        var catAction = batch.GetValue();
 
         // Assert
-        var exception = Assert.Throws<InvalidOperationException>(() => catAction);
+        var exception = Assert.Throws<InvalidOperationException>(() => batch.GetValue());
         Assert.Contains("Sequence contains more than one element", exception.Message);
     }
 

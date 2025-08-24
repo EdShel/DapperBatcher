@@ -86,7 +86,6 @@ public class QueryFirstBatchedTests
 
         // Act
         var batch = db.QueryFirstBatched<int?>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 222 });
-        var id = batch.GetValue();
 
         // Assert
         var exception = Assert.Throws<InvalidOperationException>(() => batch.GetValue());

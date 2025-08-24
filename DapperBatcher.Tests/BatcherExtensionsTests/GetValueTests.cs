@@ -13,10 +13,10 @@ public class GetValueTests
 
         // Act
         var selectBeforeBatch = db.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 6 });
-        var insertBatch = db.QueryFirstBatched<int>("INSERT INTO Cat (Id, Name, CoatColor) VALUES ($Id, $Name, $CoatColor);", new Cat { Id = 6, Name = "Snowball", CoatColor = "White" });
+        var insertBatch = db.ExecuteBatched("INSERT INTO Cat (Id, Name, CoatColor) VALUES ($Id, $Name, $CoatColor);", new Cat { Id = 6, Name = "Snowball", CoatColor = "White" });
         var selectAfterBatch = db.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 6 });
 
-        var insertedRows = insertBatch.GetValue();
+        int insertedRows = insertBatch.GetValue();
         var catBefore = selectBeforeBatch.GetValue();
         var catAfter = selectAfterBatch.GetValue();
 
