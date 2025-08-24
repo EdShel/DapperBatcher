@@ -47,8 +47,6 @@ internal class ProxyParametersCollection : IDataParameterCollection, IEnumerable
 
     public void Clear()
     {
-        Console.WriteLine("Clear Parameters Collection DapperDbCommandProxy");
-        // parameters.Clear();
     }
 
     public bool Contains(object? value)

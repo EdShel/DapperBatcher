@@ -10,53 +10,26 @@ internal class ProxyCommand(IDbConnection connection) : IDbCommand
 
     private ProxyParametersCollection parametersCollection = new();
 
-    #region Placeholders
     public int CommandTimeout
     {
-        get
-        {
-            return 0;
-        }
+        get => 0;
         set { }
     }
     public CommandType CommandType
     {
-        get
-        {
-            Console.WriteLine("Get CommandType DapperDbCommandProxy");
-            return CommandType.Text;
-        }
-        set
-        {
-            Console.WriteLine("Set CommandType DapperDbCommandProxy");
-        }
+        get => CommandType.Text;
+        set { }
     }
     public IDbTransaction? Transaction
     {
-        get
-        {
-            Console.WriteLine("Get Transaction DapperDbCommandProxy");
-            return null;
-        }
-        set
-        {
-            Console.WriteLine("Set Transaction DapperDbCommandProxy");
-        }
+        get => null;
+        set { }
     }
     public UpdateRowSource UpdatedRowSource
     {
-        get
-        {
-            Console.WriteLine("Get UpdatedRowSource DapperDbCommandProxy");
-            return UpdateRowSource.None;
-        }
-        set
-        {
-            Console.WriteLine("Set UpdatedRowSource DapperDbCommandProxy");
-        }
+        get => UpdateRowSource.None;
+        set { }
     }
-
-    #endregion
 
     public IDbConnection? Connection
     {
@@ -72,46 +45,38 @@ internal class ProxyCommand(IDbConnection connection) : IDbCommand
 
     public void Cancel()
     {
-        Console.WriteLine("Cancel DapperDbCommandProxy");
     }
 
     public IDbDataParameter CreateParameter()
     {
-        Console.WriteLine("CreateParameter DapperDbCommandProxy");
         return new ProxyParameter();
     }
 
     public void Dispose()
     {
-        Console.WriteLine("Dispose DapperDbCommandProxy");
     }
 
     public int ExecuteNonQuery()
     {
-        Console.WriteLine("ExecuteNonQuery DapperDbCommandProxy");
         return 0;
     }
 
     public IDataReader ExecuteReader()
     {
-        Console.WriteLine("ExecuteReader DapperDbCommandProxy");
         return new ProxyDataReader();
     }
 
     public IDataReader ExecuteReader(CommandBehavior behavior)
     {
-        Console.WriteLine("ExecuteReader(CommandBehavior) DapperDbCommandProxy");
         return new ProxyDataReader();
     }
 
     public object? ExecuteScalar()
     {
-        Console.WriteLine("ExecuteScalar DapperDbCommandProxy");
         return null;
     }
 
     public void Prepare()
     {
-        Console.WriteLine("Prepare DapperDbCommandProxy");
     }
 }

@@ -14,12 +14,10 @@ internal class ProxyDataReader : IDataReader
 
     public void Close()
     {
-        Console.WriteLine("Close DapperDbDataReaderProxy");
     }
 
     public void Dispose()
     {
-        Console.WriteLine("Dispose DapperDbDataReaderProxy");
     }
 
     public bool GetBoolean(int i) => false;

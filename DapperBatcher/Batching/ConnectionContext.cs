@@ -14,18 +14,18 @@ internal class ConnectionContext(
     /// <summary>
     /// List of commands created by Dapper.
     /// </summary>
-    internal readonly List<ProxyCommand> BatchedCommands = new();
+    private readonly List<ProxyCommand> batchedCommands = new();
 
     /// <summary>
     /// List of value accessors given away to the user.
-    /// Has the same length as <see cref="BatchedCommands"/>
+    /// Has the same length as <see cref="batchedCommands"/>
     /// </summary>
-    internal readonly List<IBatchItem> BatchedItems = new();
+    private readonly List<IBatchItem> batchedItems = new();
 
     internal void AddToBatch(IBatchItem item, ProxyCommand command)
     {
-        BatchedCommands.Add(command);
-        BatchedItems.Add(item);
+        batchedCommands.Add(command);
+        batchedItems.Add(item);
     }
 
     internal async Task FlushBatchAsync(bool shouldAsync, CancellationToken cancellationToken)
@@ -54,13 +54,13 @@ internal class ConnectionContext(
             bool hasNonQueryCommands = false;
             do
             {
-                Debug.Assert(index < BatchedItems.Count);
-                while (index < BatchedItems.Count && BatchedItems[index] is NonQueryValue)
+                Debug.Assert(index < batchedItems.Count);
+                while (index < batchedItems.Count && batchedItems[index] is NonQueryValue)
                 {
                     hasNonQueryCommands = true;
                     index++;
                 }
-                if (index >= BatchedItems.Count)
+                if (index >= batchedItems.Count)
                 {
                     // We've ran out of batched commands but there's still an unhandled result set.
                     // The following increment is needed for the error message below
@@ -68,17 +68,17 @@ internal class ConnectionContext(
                     break;
                 }
 
-                var batchedValue = BatchedItems[index];
+                var batchedValue = batchedItems[index];
                 batchedValue.ReceiveResult(dataReader);
                 index++;
             } while (dataReader.NextResult());
 
-            if (index < BatchedItems.Count)
+            if (index < batchedItems.Count)
             {
                 throw new SqlBatchingException(
                     "Batch returned fewer result sets than expected. Make sure all INSERT/UPDATE/DELETE commands are executed under ExecuteBatched.");
             }
-            else if (index > BatchedItems.Count)
+            else if (index > batchedItems.Count)
             {
                 throw new SqlBatchingException(
                     "Batch returned more result sets than expected. This typically happens when multiple SELECT commands are queried under a single batched command. Try putting each SELECT in its own *Batched command.");
@@ -86,7 +86,7 @@ internal class ConnectionContext(
 
             if (hasNonQueryCommands)
             {
-                foreach (var batchedValue in BatchedItems)
+                foreach (var batchedValue in batchedItems)
                 {
                     if (batchedValue is NonQueryValue)
                     {
@@ -97,8 +97,8 @@ internal class ConnectionContext(
         }
         finally
         {
-            BatchedCommands.Clear();
-            BatchedItems.Clear();
+            batchedCommands.Clear();
+            batchedItems.Clear();
         }
 
         if (wasClosed && realConnection.State != ConnectionState.Closed)
@@ -115,7 +115,7 @@ internal class ConnectionContext(
         int parametersCounter = 0;
 
         var sb = new StringBuilder();
-        foreach (ProxyCommand command in BatchedCommands)
+        foreach (ProxyCommand command in batchedCommands)
         {
             var parameterNamesToReplace = new Dictionary<string, string>();
 

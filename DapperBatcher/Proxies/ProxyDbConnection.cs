@@ -21,30 +21,24 @@ internal class ProxyDbConnection : IDbConnection
     public ConnectionState State => ConnectionState.Open;
     public IDbTransaction BeginTransaction()
     {
-        Console.WriteLine("BeginTransaction DapperDbConnectionProxy");
         throw new NotImplementedException();
     }
 
     public IDbTransaction BeginTransaction(IsolationLevel il)
     {
-        Console.WriteLine("BeginTransaction(il) DapperDbConnectionProxy");
         throw new NotImplementedException();
     }
 
     public void ChangeDatabase(string databaseName)
     {
-        Console.WriteLine("ChangeDatabase DapperDbConnectionProxy");
     }
 
     public void Close()
     {
-        Console.WriteLine("Close DapperDbConnectionProxy");
     }
 
     public IDbCommand CreateCommand()
     {
-        Console.WriteLine("CreateCommand DapperDbConnectionProxy");
-
         var command = new ProxyCommand(this);
         CreatedCommands.Add(command);
         return command;
