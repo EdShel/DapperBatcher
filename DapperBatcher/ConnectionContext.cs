@@ -6,7 +6,7 @@ using System.Text;
 namespace EdShel.DapperBatcher;
 
 internal class ConnectionContext(
-    IDbConnection realConnection // TODO: check for memory leak (don't know if this holds the reference)
+    IDbConnection realConnection
 )
 {
     /// <summary>
@@ -26,14 +26,26 @@ internal class ConnectionContext(
         BatchedItems.Add(item);
     }
 
-    internal async Task FlushBatchAsync(CancellationToken cancellationToken)
+    internal async Task FlushBatchAsync(bool shouldAsync, CancellationToken cancellationToken)
     {
-        // TODO: don't reopen connection if it's already open
+        bool wasClosed = realConnection.State == ConnectionState.Closed;
+        if (wasClosed)
+        {
+            if (shouldAsync && realConnection is DbConnection dbConnection)
+            {
+                await dbConnection.OpenAsync(cancellationToken);
+            }
+            else
+            {
+                realConnection.Open();
+            }
+        }
+
         try
         {
             realConnection.Open();
             IDbCommand realCommand = CreateRealCommand();
-            using var dataReader = realCommand is DbCommand dbCommand
+            using var dataReader = shouldAsync && realCommand is DbCommand dbCommand
                 ? await dbCommand.ExecuteReaderAsync(cancellationToken)
                 : realCommand.ExecuteReader();
             int index = 0;
@@ -41,18 +53,20 @@ internal class ConnectionContext(
             do
             {
                 Debug.Assert(index < BatchedItems.Count);
-                while (index < BatchedItems.Count && BatchedItems[index] is BatchedNonQueryValue)
+                while (index < BatchedItems.Count && BatchedItems[index] is NonQueryValue)
                 {
                     hasNonQueryCommands = true;
                     index++;
                 }
                 if (index >= BatchedItems.Count)
                 {
-                    index++; // For the exception guard after the loop
+                    // We've ran out of batched commands but there's still an unhandled result set.
+                    // The following increment is needed for the error message below
+                    index++;
                     break;
                 }
 
-                IBatchItem batchedValue = BatchedItems[index];
+                var batchedValue = BatchedItems[index];
                 batchedValue.ReceiveResult(dataReader);
                 index++;
             } while (dataReader.NextResult());
@@ -70,9 +84,9 @@ internal class ConnectionContext(
 
             if (hasNonQueryCommands)
             {
-                foreach (IBatchItem batchedValue in BatchedItems)
+                foreach (var batchedValue in BatchedItems)
                 {
-                    if (batchedValue is BatchedNonQueryValue)
+                    if (batchedValue is NonQueryValue)
                     {
                         batchedValue.ReceiveResult(dataReader);
                     }
@@ -83,6 +97,11 @@ internal class ConnectionContext(
         {
             BatchedCommands.Clear();
             BatchedItems.Clear();
+        }
+
+        if (wasClosed && realConnection.State != ConnectionState.Closed)
+        {
+            realConnection.Close();
         }
     }
 

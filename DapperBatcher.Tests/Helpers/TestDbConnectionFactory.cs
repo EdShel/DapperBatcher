@@ -2,13 +2,13 @@ using System.Data;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
-namespace DapperBatcher.Tests.Helpers;
+namespace EdShel.DapperBatcher.Tests.Helpers;
 
-public static class CatsDbConnectionFactory
+public static class TestDbConnectionFactory
 {
-    public static IDbConnection CreateInMemoryDB()
+    public static IDbConnection CreateInMemoryCatsDB()
     {
-        var connection = new SqliteConnection("Data Source=:memory:");
+        var connection = CreateInMemoryEmptyDB();
         connection.Open();
         // Basically, 5 cats and two of them are Orange
         connection.Execute("""
@@ -20,6 +20,12 @@ public static class CatsDbConnectionFactory
                 (4, 'Felix', 'Black'),
                 (5, 'Leopold', 'Orange');
         """);
+        return connection;
+    }
+
+    public static IDbConnection CreateInMemoryEmptyDB()
+    {
+        var connection = new SqliteConnection("Data Source=:memory:");
         return connection;
     }
 }

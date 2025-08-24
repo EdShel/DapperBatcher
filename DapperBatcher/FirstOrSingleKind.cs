@@ -1,6 +1,6 @@
 namespace EdShel.DapperBatcher;
 
-internal enum BatchedCommandKind
+internal enum FirstOrSingleKind
 {
     None,
     Single,

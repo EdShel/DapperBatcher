@@ -1,9 +1,11 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EdShel.DapperBatcher;
 
 internal class ProxyCommand(IDbConnection connection) : IDbCommand
 {
+    [AllowNull]
     public string CommandText { get; set; }
 
     private ProxyParametersCollection parametersCollection = new();
@@ -65,7 +67,7 @@ internal class ProxyCommand(IDbConnection connection) : IDbCommand
         get => connection;
         set
         {
-            connection = value;
+            connection = value!;
         }
     }
 

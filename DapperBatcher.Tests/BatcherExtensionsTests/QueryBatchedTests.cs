@@ -1,7 +1,6 @@
-using DapperBatcher.Tests.Helpers;
-using EdShel.DapperBatcher;
+using EdShel.DapperBatcher.Tests.Helpers;
 
-namespace DapperBatcher.Tests.BatcherExtensionsTests;
+namespace EdShel.DapperBatcher.Tests.BatcherExtensionsTests;
 
 public class QueryBatchedTests
 {
@@ -9,7 +8,7 @@ public class QueryBatchedTests
     public void QueryBatched_ByColorAndThenById_ReturnsMultipleItems()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch1 = db.QueryBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE CoatColor = $CoatColor", new { CoatColor = "Orange" });
@@ -30,7 +29,7 @@ public class QueryBatchedTests
     public void QueryBatched_DifferentTypes_ReturnsCorrectClasses()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var colorsBatch = db.QueryBatched<string>("SELECT CoatColor FROM Cat WHERE CoatColor = $CoatColor", new { CoatColor = "Orange" });
@@ -57,7 +56,7 @@ public class QueryBatchedTests
     public void QueryBatched_DifferentTypesAndNoMatches_ReturnsEmptyIEnumerable()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var colorsBatch = db.QueryBatched<string>("SELECT CoatColor FROM Cat WHERE CoatColor = $CoatColor", new { CoatColor = "Rainbow" });

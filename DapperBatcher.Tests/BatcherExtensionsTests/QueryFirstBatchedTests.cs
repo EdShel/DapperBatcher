@@ -1,7 +1,6 @@
-using DapperBatcher.Tests.Helpers;
-using EdShel.DapperBatcher;
+using EdShel.DapperBatcher.Tests.Helpers;
 
-namespace DapperBatcher.Tests.BatcherExtensionsTests;
+namespace EdShel.DapperBatcher.Tests.BatcherExtensionsTests;
 
 public class QueryFirstBatchedTests
 {
@@ -9,7 +8,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingOneCatWithoutParameters_ReturnsCatWithMinId()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat ORDER BY Id LIMIT 1");
@@ -24,7 +23,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingExistingCatById_ReturnsObject()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -39,7 +38,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingInt_ReturnsInt()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QueryFirstBatched<int>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -53,7 +52,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingNullableInt_ReturnsIntWithValue()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QueryFirstBatched<int?>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -68,7 +67,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingMissingCatById_Throws()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 222 });
@@ -82,7 +81,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingMissingNullableInt_Throws()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QueryFirstBatched<int?>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 222 });
@@ -96,7 +95,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingMoreThanOne_ReturnsFirst()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat ORDER BY Id");
@@ -111,7 +110,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingTwoCatsInBatch_ReturnsRespectiveIds()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch1 = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -130,7 +129,7 @@ public class QueryFirstBatchedTests
     public void QueryFirstBatched_WhenSelectingTwoCatsInBatchButOneIsMissing_ReturnsForOneAndThrowsForTheOther()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch1 = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });

@@ -1,8 +1,9 @@
 using System.Data;
+using System.Diagnostics;
 
 namespace EdShel.DapperBatcher;
 
-internal class BatchedNonQueryValue(
+internal class NonQueryValue(
     ConnectionContext? context
 ) : IBatchedValue<int>, IBatchItem
 {
@@ -25,12 +26,8 @@ internal class BatchedNonQueryValue(
     {
         if (!resultReceived)
         {
-            await context!.FlushBatchAsync(cancellationToken);
-
-            if (!resultReceived)
-            {
-                throw new InvalidOperationException("Batch was executed by this item haven't received the result.");
-            }
+            await context!.FlushBatchAsync(shouldAsync: true, cancellationToken);
+            Debug.Assert(resultReceived, "Batch was executed by this item haven't received the result.");
         }
 
         return result;
@@ -38,6 +35,12 @@ internal class BatchedNonQueryValue(
 
     public int GetValue()
     {
-        return GetValueAsync().GetAwaiter().GetResult();
+        if (!resultReceived)
+        {
+            context!.FlushBatchAsync(shouldAsync: false, CancellationToken.None).GetAwaiter().GetResult();
+            Debug.Assert(resultReceived, "Batch was executed by this item haven't received the result.");
+        }
+
+        return result;
     }
 }

@@ -1,7 +1,6 @@
-using DapperBatcher.Tests.Helpers;
-using EdShel.DapperBatcher;
+using EdShel.DapperBatcher.Tests.Helpers;
 
-namespace DapperBatcher.Tests.BatcherExtensionsTests;
+namespace EdShel.DapperBatcher.Tests.BatcherExtensionsTests;
 
 public class QuerySingleOrDefaultBatchedTests
 {
@@ -9,7 +8,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenSelectingOneCatWithoutParameters_ReturnsCatWithMinId()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QuerySingleOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat ORDER BY Id LIMIT 1");
@@ -24,7 +23,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenSelectingExistingCatById_ReturnsObject()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QuerySingleOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -39,7 +38,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenSelectingInt_ReturnsInt()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QuerySingleOrDefaultBatched<int>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -53,7 +52,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenSelectingNullableInt_ReturnsIntWithValue()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QuerySingleOrDefaultBatched<int?>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -68,7 +67,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenSelectingMissingCatById_ReturnsNull()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QuerySingleOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 222 });
@@ -82,7 +81,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenSelectingMissingNullableInt_ReturnsNullValue()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QuerySingleOrDefaultBatched<int?>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 222 });
@@ -96,7 +95,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenSelectingMoreThanOne_Throws()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch = db.QuerySingleOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat ORDER BY Id");
@@ -111,7 +110,7 @@ public class QuerySingleOrDefaultBatchedTests
     public void QuerySingleOrDefaultBatched_WhenTwoQueriesAndOneHas2Elements_ThrowsForOneButNotTheOther()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batchOf2 = db.QuerySingleOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id1 OR Id = $Id2", new { Id1 = 1, Id2 = 2 });

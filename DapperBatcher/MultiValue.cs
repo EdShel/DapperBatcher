@@ -1,9 +1,10 @@
 using System.Data;
+using System.Diagnostics;
 using Dapper;
 
 namespace EdShel.DapperBatcher;
 
-internal class BatchedMultiValue<T>(
+internal class MultiValue<T>(
     ConnectionContext? context
 ) : IBatchedValue<IEnumerable<T>>, IBatchItem
 {
@@ -24,12 +25,8 @@ internal class BatchedMultiValue<T>(
     {
         if (result == null)
         {
-            await context!.FlushBatchAsync(cancellationToken);
-
-            if (result == null)
-            {
-                throw new InvalidOperationException("Batch was executed by this item haven't received the result.");
-            }
+            await context!.FlushBatchAsync(shouldAsync: true, cancellationToken);
+            Debug.Assert(result != null, "Batch was executed by this item haven't received the result.");
         }
 
         return result!;
@@ -37,6 +34,12 @@ internal class BatchedMultiValue<T>(
 
     public IEnumerable<T> GetValue()
     {
-        return GetValueAsync().GetAwaiter().GetResult();
+        if (result == null)
+        {
+            context!.FlushBatchAsync(shouldAsync: false, CancellationToken.None).GetAwaiter().GetResult();
+            Debug.Assert(result != null, "Batch was executed by this item haven't received the result.");
+        }
+
+        return result!;
     }
 }

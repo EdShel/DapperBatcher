@@ -7,9 +7,9 @@ internal class ProxyParametersCollection : IDataParameterCollection, IEnumerable
 {
     private readonly List<ProxyParameter> parameters = new();
 
-    public object? this[string parameterName]
+    public object this[string parameterName]
     {
-        get => parameters.FirstOrDefault();
+        get => parameters[0];
         set
         {
             if (parameters.Count > 0)

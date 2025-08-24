@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EdShel.DapperBatcher;
 
@@ -44,6 +45,7 @@ internal class ProxyParameter : IDbDataParameter
     }
 
     private string _parameterName = string.Empty;
+    [AllowNull]
     public string ParameterName
     {
         get
@@ -54,11 +56,12 @@ internal class ProxyParameter : IDbDataParameter
         set
         {
             Console.WriteLine($"Set ParameterName DapperDbDataParameterProxy: {value}");
-            _parameterName = value;
+            _parameterName = value!;
         }
     }
 
     private string _sourceColumn = string.Empty;
+    [AllowNull]
     public string SourceColumn
     {
         get
@@ -69,7 +72,7 @@ internal class ProxyParameter : IDbDataParameter
         set
         {
             Console.WriteLine($"Set SourceColumn DapperDbDataParameterProxy: {value}");
-            _sourceColumn = value;
+            _sourceColumn = value!;
         }
     }
 

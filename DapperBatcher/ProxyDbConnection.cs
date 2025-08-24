@@ -1,53 +1,24 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EdShel.DapperBatcher;
 
-internal class ProxyDbConnection(IDbConnection inner) : IDbConnection
+internal class ProxyDbConnection : IDbConnection
 {
     internal List<ProxyCommand> CreatedCommands = new();
 
+    [AllowNull]
     public string ConnectionString
     {
-        get
-        {
-            Console.WriteLine("Get ConnectionString DapperDbConnectionProxy");
-            return inner.ConnectionString;
-        }
-        set
-        {
-            Console.WriteLine("Set ConnectionString DapperDbConnectionProxy");
-            Console.WriteLine($"Proxy setting ConnectionString to: {value}");
-            inner.ConnectionString = value;
-        }
+        get => ":proxy:";
+        set { }
     }
 
-    public int ConnectionTimeout
-    {
-        get
-        {
-            Console.WriteLine("Get ConnectionTimeout DapperDbConnectionProxy");
-            return inner.ConnectionTimeout;
-        }
-    }
+    public int ConnectionTimeout => 15;
 
-    public string Database
-    {
-        get
-        {
-            Console.WriteLine("Get Database DapperDbConnectionProxy");
-            return inner.Database;
-        }
-    }
+    public string Database => string.Empty;
 
-    public ConnectionState State
-    {
-        get
-        {
-            Console.WriteLine("Get State DapperDbConnectionProxy");
-            return inner.State;
-        }
-    }
-
+    public ConnectionState State => ConnectionState.Open;
     public IDbTransaction BeginTransaction()
     {
         Console.WriteLine("BeginTransaction DapperDbConnectionProxy");

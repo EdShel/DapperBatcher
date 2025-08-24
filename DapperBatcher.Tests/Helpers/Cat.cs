@@ -1,4 +1,4 @@
-namespace DapperBatcher.Tests.Helpers;
+namespace EdShel.DapperBatcher.Tests.Helpers;
 
 class Cat
 {

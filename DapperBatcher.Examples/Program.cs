@@ -1,14 +1,29 @@
-﻿using Dapper;
+﻿using System.Runtime.CompilerServices;
+using Dapper;
 using EdShel.DapperBatcher;
 using Microsoft.Data.Sqlite;
 
-using var connection = new SqliteConnection("Data Source=:memory:");
-// using var connection = new SqliteConnection("Data Source=test.db");
-connection.Open(); // Open the connection before using it
-InitializeDB(connection);
+var weakRef = new ConditionalWeakTable<object, string>();
+object[] arr = new object[1000];
+for (int i = 0; i < 1000; i++)
+{
+    arr[i] = new object();
+    weakRef.Add(arr[i], "test");
+}
 
-var intt = connection.QueryFirstOrDefault<int>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 1 });
-System.Console.WriteLine($"Id: {intt}");
+GC.Collect();
+GC.WaitForPendingFinalizers();
+
+System.Console.WriteLine(weakRef.Count());
+
+
+// using var connection = new SqliteConnection("Data Source=:memory:");
+// using var connection = new SqliteConnection("Data Source=test.db");
+// connection.Open(); // Open the connection before using it
+// InitializeDB(connection);
+
+// var intt = connection.QueryFirstOrDefault<int>("SELECT Id FROM Cat WHERE Id = $Id", new { Id = 1 });
+// System.Console.WriteLine($"Id: {intt}");
 
 // var val1 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
 // var val2 = connection.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 2 });

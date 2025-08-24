@@ -1,7 +1,6 @@
-using DapperBatcher.Tests.Helpers;
-using EdShel.DapperBatcher;
+using EdShel.DapperBatcher.Tests.Helpers;
 
-namespace DapperBatcher.Tests.BatcherExtensionsTests;
+namespace EdShel.DapperBatcher.Tests.BatcherExtensionsTests;
 
 public class GetValueTests
 {
@@ -9,7 +8,7 @@ public class GetValueTests
     public void GetValue_WhenInsertAndSelect_OrderOfCallsShouldntMatter()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var selectBeforeBatch = db.QueryFirstOrDefaultBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 6 });
@@ -31,7 +30,7 @@ public class GetValueTests
     public void GetValue_WhenSelectOutOfOrder_GetValueReturnsRespectiveObject()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch1 = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
@@ -52,7 +51,7 @@ public class GetValueTests
     public void GetValue_WhenMultipleCallsOnOneObject_ReturnsSameObjectOnRepeatedCalls()
     {
         // Arrange
-        using var db = CatsDbConnectionFactory.CreateInMemoryDB();
+        using var db = TestDbConnectionFactory.CreateInMemoryCatsDB();
 
         // Act
         var batch1 = db.QueryFirstBatched<Cat>("SELECT Id, Name, CoatColor FROM Cat WHERE Id = $Id", new { Id = 1 });
