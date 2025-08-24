@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using EdShel.DapperBatcher.Batching;
 
 namespace EdShel.DapperBatcher;
 

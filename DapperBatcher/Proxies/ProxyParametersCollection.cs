@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Data;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Proxies;
 
 internal class ProxyParametersCollection : IDataParameterCollection, IEnumerable<ProxyParameter>
 {

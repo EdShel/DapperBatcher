@@ -2,7 +2,7 @@ using System.Data;
 using System.Diagnostics;
 using Dapper;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Batching;
 
 internal class MultiValue<T>(
     ConnectionContext? context

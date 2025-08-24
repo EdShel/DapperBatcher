@@ -1,7 +1,7 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Proxies;
 
 internal class ProxyCommand(IDbConnection connection) : IDbCommand
 {
@@ -15,13 +15,9 @@ internal class ProxyCommand(IDbConnection connection) : IDbCommand
     {
         get
         {
-            Console.WriteLine("Get CommandTimeout DapperDbCommandProxy");
             return 0;
         }
-        set
-        {
-            Console.WriteLine("Set CommandTimeout DapperDbCommandProxy");
-        }
+        set { }
     }
     public CommandType CommandType
     {

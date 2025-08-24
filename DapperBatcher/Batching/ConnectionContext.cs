@@ -2,8 +2,10 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
+using EdShel.DapperBatcher.Exceptions;
+using EdShel.DapperBatcher.Proxies;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Batching;
 
 internal class ConnectionContext(
     IDbConnection realConnection
@@ -120,7 +122,7 @@ internal class ConnectionContext(
             foreach (ProxyParameter commandParameter in command.ParametersSafe)
             {
                 string paramName = commandParameter.ParameterName;
-                // TODO: we might reuse the command if it has the same value, precision etc
+                // We might want to reuse the parameter if it has the same value, precision etc
                 if (parametersHashmap.ContainsKey(paramName))
                 {
                     const int maxParameters = 2048;

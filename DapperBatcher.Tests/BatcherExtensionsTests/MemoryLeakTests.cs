@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using EdShel.DapperBatcher.Batching;
 using EdShel.DapperBatcher.Tests.Helpers;
 
 namespace EdShel.DapperBatcher.Tests.BatcherExtensionsTests;

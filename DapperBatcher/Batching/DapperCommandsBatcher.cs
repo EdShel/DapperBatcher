@@ -2,8 +2,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Dapper;
+using EdShel.DapperBatcher.Proxies;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Batching;
 
 public class DapperCommandsBatcher
 {

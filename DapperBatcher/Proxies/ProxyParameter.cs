@@ -1,7 +1,7 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Proxies;
 
 internal class ProxyParameter : IDbDataParameter
 {

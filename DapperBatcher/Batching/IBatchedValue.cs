@@ -1,4 +1,4 @@
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Batching;
 
 /// <summary>
 /// Lazy accessor to the value returned by a batched query.

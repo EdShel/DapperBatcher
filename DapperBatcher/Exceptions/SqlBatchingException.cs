@@ -1,4 +1,4 @@
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Exceptions;
 
 [Serializable]
 public class SqlBatchingException : InvalidOperationException

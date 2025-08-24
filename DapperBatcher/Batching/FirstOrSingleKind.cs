@@ -1,4 +1,4 @@
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Batching;
 
 internal enum FirstOrSingleKind
 {

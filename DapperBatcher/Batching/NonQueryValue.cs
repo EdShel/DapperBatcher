@@ -1,7 +1,7 @@
 using System.Data;
 using System.Diagnostics;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Batching;
 
 internal class NonQueryValue(
     ConnectionContext? context

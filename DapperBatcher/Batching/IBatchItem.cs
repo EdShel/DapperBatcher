@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace EdShel.DapperBatcher;
+namespace EdShel.DapperBatcher.Batching;
 
 internal interface IBatchItem
 {
