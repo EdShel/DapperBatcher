@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperBatcher", "DapperBatc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperBatcher.Examples", "DapperBatcher.Examples\DapperBatcher.Examples.csproj", "{59850511-28D2-4369-BE91-D3AED4465074}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperBatcher.Tests", "DapperBatcher.Tests\DapperBatcher.Tests.csproj", "{F91CE229-9811-450C-92B2-4CFE3EAECD15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{59850511-28D2-4369-BE91-D3AED4465074}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59850511-28D2-4369-BE91-D3AED4465074}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59850511-28D2-4369-BE91-D3AED4465074}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F91CE229-9811-450C-92B2-4CFE3EAECD15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F91CE229-9811-450C-92B2-4CFE3EAECD15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F91CE229-9811-450C-92B2-4CFE3EAECD15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F91CE229-9811-450C-92B2-4CFE3EAECD15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
