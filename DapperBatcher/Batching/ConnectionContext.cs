@@ -62,9 +62,6 @@ internal class ConnectionContext(
                 }
                 if (index >= batchedItems.Count)
                 {
-                    // We've ran out of batched commands but there's still an unhandled result set.
-                    // The following increment is needed for the error message below
-                    index++;
                     break;
                 }
 
@@ -93,6 +90,11 @@ internal class ConnectionContext(
                         batchedValue.ReceiveResult(dataReader);
                     }
                 }
+            }
+            else if (dataReader.RecordsAffected != -1)
+            {
+                throw new SqlBatchingException(
+                    "Batch returned RecordsAffected even though there was no ExecuteBatched command. Make sure all INSERT/UPDATE/DELETE commands are executed under ExecuteBatched.");
             }
         }
         finally
