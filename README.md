@@ -1,5 +1,12 @@
-﻿using Dapper;
-using EdShel.DapperBatcher;
+# DapperBatcher
+
+Lightweight & easy to use .NET library for batching database commands made through [Dapper](https://github.com/DapperLib/Dapper).
+
+## How to use
+See [examples project](./DapperBatcher.Examples/Program.cs) for the full code.
+
+```cs
+using EdShel.DapperBatcher; // Import the namespace
 using Microsoft.Data.Sqlite;
 
 using var connection = new SqliteConnection("Data Source=:memory:");
@@ -27,29 +34,25 @@ Console.WriteLine($"Cat 3 QuerySingleBatched: {cat3}"); // Cat 3 QuerySingleBatc
 Console.WriteLine($"Cat 4 QuerySingleOrDefaultBatched: {cat4}"); // Cat 4 QuerySingleOrDefaultBatched: 
 Console.WriteLine($"Inserted {affectedRows1.GetValue()} ({affectedRows1.GetValue()}) cats"); // Inserted 2 (2) cats
 Console.WriteLine($"Now there're {allCats.GetValue().Count()} cats in total"); // Now there're 7 cats in total
+```
 
+## API
+There're a few extension methods named similarly to Dapper but they end with the prefix ``Batched``:
+- ``IBatchedValue<IEnumerable<T>> QueryBatched<T>(...)``
+- ``IBatchedValue<T> QueryFirstBatched<T>(...)``
+- ``IBatchedValue<T?> QueryFirstOrDefaultBatched<T>(...)``
+- ``IBatchedValue<T> QuerySingleBatched<T>(...)``
+- ``IBatchedValue<T?> QuerySingleOrDefaultBatched<T>(...)``
+- ``IBatchedValue<int> ExecuteBatched(...)``
 
-static void InitializeDB(SqliteConnection connection)
-{
-    connection.Execute("CREATE TABLE Cat (Id INTEGER PRIMARY KEY, Name TEXT, CoatColor TEXT)");
-    connection.Execute("""
-        INSERT INTO Cat (Id, Name, CoatColor) VALUES
-            (1, 'Garfield', 'Orange'),
-            (2, 'Tom', 'Gray'),
-            (3, 'Sylvester', 'Tuxedo'),
-            (4, 'Felix', 'Black'),
-            (5, 'Leopold', 'Orange');
-    """);
-}
+Each method returns an interface ``IBatchedValue<T>`` which provides two functions: ``GetValueAsync`` and ``GetValue``.
+When the first value is retrieved, the entire batch gets sent to the database as a single command.
+After that you may obtain the values repeatedly - they are cached and returned synchronously.
 
-class Cat
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string CoatColor { get; set; } = null!;
+### Important note about managing connections
+All related ``*Batched`` calls must be made on the same connection object because the batch metadata is stored via ``ConditionalWeakTable``.
+This means that the calls made for different connections are batched separately, providing better isolation and error-handling.
+If you're injecting your ``IDbConnection`` via ``IServiceProvider``, then consider ``Scoped`` lifetime instead of ``Transient``.
 
-    public override string ToString()
-    {
-        return $"|{Id}: {Name} ({CoatColor})|";
-    }
-}
+## License
+MIT but be sure to check license for [Dapper](https://github.com/DapperLib/Dapper) separately.

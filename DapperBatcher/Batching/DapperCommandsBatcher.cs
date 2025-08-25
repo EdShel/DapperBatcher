@@ -18,10 +18,10 @@ public class DapperCommandsBatcher
         );
     }
 
-    public IBatchedValue<IEnumerable<T>> QueryBatched<T>(IDbConnection connection, string sql, object? param = null, CommandType? commandType = null)
+    public IBatchedValue<IEnumerable<T>> QueryBatched<T>(IDbConnection connection, string sql, object? param = null)
     {
         var connectionProxy = new ProxyDbConnection();
-        _ = connectionProxy.Query(sql, param, commandType: commandType);
+        _ = connectionProxy.Query(sql, param);
         Debug.Assert(connectionProxy.CreatedCommands.Count == 1);
         var proxyCommand = connectionProxy.CreatedCommands[0];
 
@@ -32,10 +32,10 @@ public class DapperCommandsBatcher
         return item;
     }
 
-    public IBatchedValue<T?> QueryFirstOrDefaultBatched<T>(IDbConnection connection, string sql, object? param = null, CommandType? commandType = null)
+    public IBatchedValue<T?> QueryFirstOrDefaultBatched<T>(IDbConnection connection, string sql, object? param = null)
     {
         var connectionProxy = new ProxyDbConnection();
-        _ = connectionProxy.Query(sql, param, commandType: commandType);
+        _ = connectionProxy.Query(sql, param);
         Debug.Assert(connectionProxy.CreatedCommands.Count == 1);
         var proxyCommand = connectionProxy.CreatedCommands[0];
 
@@ -46,10 +46,10 @@ public class DapperCommandsBatcher
         return item;
     }
 
-    public IBatchedValue<T> QueryFirstBatched<T>(IDbConnection connection, string sql, object? param = null, CommandType? commandType = null)
+    public IBatchedValue<T> QueryFirstBatched<T>(IDbConnection connection, string sql, object? param = null)
     {
         var connectionProxy = new ProxyDbConnection();
-        _ = connectionProxy.Query(sql, param, commandType: commandType);
+        _ = connectionProxy.Query(sql, param);
         Debug.Assert(connectionProxy.CreatedCommands.Count == 1);
         var proxyCommand = connectionProxy.CreatedCommands[0];
 
@@ -60,10 +60,10 @@ public class DapperCommandsBatcher
         return item;
     }
 
-    public IBatchedValue<T?> QuerySingleOrDefaultBatched<T>(IDbConnection connection, string sql, object? param = null, CommandType? commandType = null)
+    public IBatchedValue<T?> QuerySingleOrDefaultBatched<T>(IDbConnection connection, string sql, object? param = null)
     {
         var connectionProxy = new ProxyDbConnection();
-        _ = connectionProxy.Query(sql, param, commandType: commandType);
+        _ = connectionProxy.Query(sql, param);
         Debug.Assert(connectionProxy.CreatedCommands.Count == 1);
         var proxyCommand = connectionProxy.CreatedCommands[0];
 
@@ -74,10 +74,10 @@ public class DapperCommandsBatcher
         return item;
     }
 
-    public IBatchedValue<T> QuerySingleBatched<T>(IDbConnection connection, string sql, object? param = null, CommandType? commandType = null)
+    public IBatchedValue<T> QuerySingleBatched<T>(IDbConnection connection, string sql, object? param = null)
     {
         var connectionProxy = new ProxyDbConnection();
-        _ = connectionProxy.Query(sql, param, commandType: commandType);
+        _ = connectionProxy.Query(sql, param);
         Debug.Assert(connectionProxy.CreatedCommands.Count == 1);
         var proxyCommand = connectionProxy.CreatedCommands[0];
 
@@ -88,10 +88,10 @@ public class DapperCommandsBatcher
         return item;
     }
 
-    public IBatchedValue<int> ExecuteBatched(IDbConnection connection, string sql, object? param = null, CommandType? commandType = null)
+    public IBatchedValue<int> ExecuteBatched(IDbConnection connection, string sql, object? param = null)
     {
         var connectionProxy = new ProxyDbConnection();
-        _ = connectionProxy.Execute(sql, param, commandType: commandType);
+        _ = connectionProxy.Execute(sql, param);
         Debug.Assert(connectionProxy.CreatedCommands.Count == 1);
         var proxyCommand = connectionProxy.CreatedCommands[0];
 
