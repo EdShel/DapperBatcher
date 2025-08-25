@@ -32,7 +32,7 @@ Console.WriteLine($"Cat 1 QueryFirstBatched: {cat1}"); // Cat 1 QueryFirstBatche
 Console.WriteLine($"Cat 2 QueryFirstOrDefaultBatched: {cat2}"); // Cat 2 QueryFirstOrDefaultBatched: |2: Tom (Gray)|
 Console.WriteLine($"Cat 3 QuerySingleBatched: {cat3}"); // Cat 3 QuerySingleBatched: |3: Sylvester (Tuxedo)|
 Console.WriteLine($"Cat 4 QuerySingleOrDefaultBatched: {cat4}"); // Cat 4 QuerySingleOrDefaultBatched: 
-Console.WriteLine($"Inserted {affectedRows1.GetValue()} ({affectedRows1.GetValue()}) cats"); // Inserted 2 (2) cats
+Console.WriteLine($"Inserted {affectedRows1.GetValue()} ({affectedRows2.GetValue()}) cats"); // Inserted 2 (2) cats
 Console.WriteLine($"Now there're {allCats.GetValue().Count()} cats in total"); // Now there're 7 cats in total
 ```
 
