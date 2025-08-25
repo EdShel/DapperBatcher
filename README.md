@@ -2,8 +2,17 @@
 
 Lightweight & easy to use .NET library for batching database commands made through [Dapper](https://github.com/DapperLib/Dapper).
 
+## Installation
+The package is available on [nuget](https://www.nuget.org/packages/EdShel.DapperBatcher/)
+
+[![EdShel.DapperBatcher](https://img.shields.io/nuget/v/EdShel.DapperBatcher.svg?logo=nuget)](https://www.nuget.org/packages/EdShel.DapperBatcher/)
+
+```bash
+dotnet add package EdShel.DapperBatcher
+```
+
 ## How to use
-See [examples project](./DapperBatcher.Examples/Program.cs) for the full code.
+See [examples project](https://github.com/EdShel/DapperBatcher/blob/main/DapperBatcher.Examples/Program.cs) for the full code.
 
 ```cs
 using EdShel.DapperBatcher; // Import the namespace

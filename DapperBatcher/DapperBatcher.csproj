@@ -5,10 +5,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>EdShel.DapperBatcher</RootNamespace>
+
+    <PackageId>EdShel.DapperBatcher</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>EdShel</Authors>
+    <Description>Out-of-the-box batching for Dapper - fewer database round-trips, better performance.</Description>
+    <PackageTags>Dapper;Database;Batch;SQL</PackageTags>
+    <RepositoryUrl>https://github.com/EdShel/DapperBatcher</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/EdShel/DapperBatcher</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Dapper" Version="[2.1.66,3.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
