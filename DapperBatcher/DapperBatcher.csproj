@@ -7,7 +7,7 @@
     <RootNamespace>EdShel.DapperBatcher</RootNamespace>
 
     <PackageId>EdShel.DapperBatcher</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>EdShel</Authors>
     <Description>Out-of-the-box batching for Dapper - fewer database round-trips, better performance.</Description>
     <PackageTags>Dapper;Database;Batch;SQL</PackageTags>
